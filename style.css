@@ -35,6 +35,7 @@ body {
   border-radius: 0.1rem;
   color: white;
   outline: none;
+  transition: transform 50ms linear;
 }
 
 .button:focus {
@@ -43,6 +44,10 @@ body {
 
 .button:hover {
   cursor: pointer;
+}
+
+.button:active {
+  transform: scale(0.98);
 }
 
 .operator, .equals {
