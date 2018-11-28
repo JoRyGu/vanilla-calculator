@@ -1,7 +1,7 @@
 # vanilla-calculator
 This small app is a simple calculator (similar to what you'd find with your Mac's Calculator.app) created with pure vanilla Javascript, HTML, and CSS. No frameworks, libraries, or packages were used. It was created to test my problem solving skills using JavaScript.
 
-![alt text](https://imgur.com/a/Bk5DQL6)
+![Demo .gif](calc.gif)
 
 ### Demo
 
