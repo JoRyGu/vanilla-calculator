@@ -1,0 +1,84 @@
+html, body, button {
+  padding: 0;
+  margin: 0;
+  font-size: 20px;
+  font-family: "Libre Franklin", sans-serif;
+}
+
+html, body {
+  height: 100vh;
+}
+
+body {
+  background-color: #dddddd;
+}
+
+.center-align {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.button {
+  height: 3em;
+  width: 3em;
+  margin: 0.1em;
+  box-shadow: -3px 3px 3px rgba(0,0,0,0.5);
+  border-radius: 0.1rem;
+  color: white;
+  outline: none;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+.operator, .equals {
+  background-color: #ee4c53;
+  border-color: black;
+}
+
+.function {
+  background-color: #3e4342;
+  border-color: black;
+  color: white;
+}
+
+.number, .decimal {
+  background-color: #5e6261;
+  border-color: black;
+  color: white;
+}
+
+.zero {
+  width: 6.5em;
+}
+
+.display {
+  border: 1px solid black;
+  width: 13.2rem;
+  height: 3.5rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.4rem;
+  margin-bottom: 0.1rem;
+  font-size: 1.2rem;
+  background-color: #2a2f2f;
+  color: white;
+  box-shadow: -3px 3px 3px rgba(0,0,0,0.5);
+  border-radius: 0.1rem;
+}
