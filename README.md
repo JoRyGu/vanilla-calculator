@@ -71,3 +71,107 @@ The core logic relies on these properties:
 
 `this.equalsPressedLast` stores the state of the equals button. If it was pressed last, the calculator will begin a new equation with subsequent number button presses. If not, the calculator will contain to add to the current equation.
 
+The most fun and challenging aspect of this project was coming up with the logic to allow the calculator to execute the operations keyed by the user and return the result using proper order of operations. I decided that I would store the information keyed by the user in an array, `this.equation`, and then process that information into two stacks - a value stack for the values keyed, and an operator stack for the operations keyed. Here are the methods I used to parse the array and return the result to the calculator's display:
+
+```JavaScript
+pressEquals() {
+    this.equation.push(parseFloat(this.currentValue));
+    this.currentValue = 0;
+    const workingEquation = this.equation.slice();
+
+    const valueStack = [];
+    const operatorStack = [];
+    let val1, val2, op;
+    
+    for(let i = 0; i < workingEquation.length; i++) {
+      if(typeof workingEquation[i] === 'number') {
+        valueStack.push(workingEquation[i]);
+      } else {
+        if(operatorStack.length > 0) {
+          if(this._hasPrecedence(workingEquation[i], operatorStack[operatorStack.length - 1])) {
+            operatorStack.push(workingEquation[i]);
+          } else {
+            val2 = valueStack.pop();
+            val1 = valueStack.pop();
+            op = operatorStack.pop();
+            valueStack.push(this._evaluateExpression(op, val2, val1));
+            operatorStack.push(workingEquation[i]);
+
+          }
+        } else {
+          operatorStack.push(workingEquation[i]);
+        }
+      }
+    }
+
+    while(operatorStack.length > 0) {
+      val2 = valueStack.pop();
+      val1 = valueStack.pop();
+      op = operatorStack.pop();
+      valueStack.push(this._evaluateExpression(op, val2, val1));
+    }
+
+    this.display.innerText = valueStack[0];
+    this.equation = [];
+    this.currentValue = valueStack[0].toString();
+    this.operator = null;
+    this.equalsPressedLast = true;
+  }
+
+  _evaluateExpression(operator, val2, val1) {
+    switch(operator) {
+      case '+':
+        return val1 + val2;
+      case '-':
+        return val1 - val2;
+      case '*':
+        return val1 * val2;
+      case '/':
+        return val1 / val2;
+    }
+  }
+
+  _hasPrecedence(newOperator, stackOperator) {
+    if(newOperator === '+' || newOperator === '-') {
+      return false;
+    } else if((newOperator === '*' || newOperator === '/') && (stackOperator === '*' || stackOperator === '/')) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+```
+
+When parsing `this.equation`, I am checking to make sure that the operator at the top of the stack does not have precedence over the operator I'm pushing onto the stack. If it does, I'm popping two values from the value stack and one operator from the operator stack and performing the proper evaluation for those return values. I'm then pushing the result of that operation back to the top of the value stack. Once I'm finished parsing `this.equation` I continue to pop 2 values and 1 operator until there are no more operators left on the operator stack. I then send that value to the calculator's display.
+
+While I obviously had to add click event listeners to all of the calculator's buttons, I also added a bit of functionality by adding a keyDown listener to the document so that users are able to input values and operators via their keyboard. This comes with the bonus function of being able to use your delete key to backspace the current value if you make a typo - a function that is not possible using the buttons displayed in the browser. This mirrors this functionality on MacOS's Calculator.app.
+
+```JavaScript
+document.addEventListener('keydown', e => {
+  const keyPress = e.key;
+
+  if(keyPress >= '0' && keyPress <= '9') {
+    equation.pressNumber(e.key);
+  }
+
+  if(keyPress === 'Enter') {
+    e.preventDefault();
+    equation.pressEquals();
+  }
+
+  if(keyPress === '+' || keyPress === '-' || keyPress === '*' || keyPress === '/') {
+    equation.pressOperator(keyPress);
+  }
+
+  if(keyPress === 'Backspace') {
+    e.preventDefault();
+    equation.pressBackspace();
+  }
+
+  if(keyPress === '.') {
+    equation.pressDecimal();
+  }
+})
+```
+
+Overall this was quite a fun, short and sweet problem solving challenge. 10/10, would recommend!
